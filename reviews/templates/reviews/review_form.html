@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% if edit %}Edit Review{% else %}Add Review{% endif %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>{% if edit %}Edit Review{% else %}Add Review{% endif %}</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">{% if edit %}Update{% else %}Submit{% endif %}</button>
+      <a href="{% if edit %}{% url 'dealership_detail' form.instance.dealership.pk %}{% else %}#{% endif %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</body>
+</html>

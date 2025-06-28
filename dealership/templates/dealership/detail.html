@@ -1,0 +1,106 @@
+<!-- backend/dealership/templates/dealership/detail.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ dealership.name }} | Car Review Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>{{ dealership.name }}</h1>
+    <p><strong>Location:</strong> {{ dealership.location }}</p>
+    <p>{{ dealership.description }}</p>
+
+
+    <!-- Add reviews and review submission here later -->
+    <!-- After dealership description -->
+
+    <hr />
+    <h3>Reviews</h3>
+    {% if reviews %}
+    <ul class="list-group mb-4">
+        {% for review in reviews %}
+        <li class="list-group-item">
+            <strong>{{ review.user.username }}</strong> — Rating: {{ review.rating }}/5
+            <br />
+            <small class="text-muted">{{ review.created_at|date:"M d, Y H:i" }}</small>
+            <p>{{ review.review_text }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No reviews yet. Be the first to review!</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <h4>Submit Your Review</h4>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+    {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to submit a review.</p>
+    {% endif %}
+
+      <ul class="list-group mb-4">
+    {% for review in reviews %}
+      <li class="list-group-item">
+        <strong>{{ review.user.username }}</strong> — Rating: {{ review.rating }}/5
+        <br />
+        <small class="text-muted">{{ review.created_at|date:"M d, Y H:i" }}</small>
+        <p>{{ review.review_text }}</p>
+        {% if review.sentiment %}
+          <p><strong>Sentiment:</strong> {{ review.sentiment }}</p>
+        {% endif %}
+        
+        {% if review.image %}
+          <img src="{{ review.image.url }}" alt="Review Image" class="img-fluid mt-2" />
+        {% endif %}
+
+        {% if user.is_authenticated and user == review.user %}
+          <a href="{% url 'review_edit' review.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <a href="{% url 'review_delete' review.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        {% endif %}
+        
+      </li>
+    {% endfor %}
+  </ul>
+
+  <nav aria-label="Review pagination">
+  <ul class="pagination">
+    {% if reviews.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ reviews.previous_page_number }}" aria-label="Previous">&laquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+    {% endif %}
+
+    {% for num in reviews.paginator.page_range %}
+      {% if reviews.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+      {% if reviews.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ reviews.next_page_number }}" aria-label="Next">&raquo;</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+    <a href="{% url 'dealership_list' %}" class="btn btn-secondary">Back to Dealerships</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Your Dashboard</a>
+    <a href="{% url 'index' %}" class="btn btn-secondary">Back to Home</a>
+  </div>
+</body>
+</html>
