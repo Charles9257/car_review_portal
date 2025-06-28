@@ -1,20 +1,14 @@
+
 # users/admin.py
 
-from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib import admin
 from .models import CustomUser
+from .forms import CustomUserCreationForm
 
 class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserCreationForm
     model = CustomUser
-    list_display = ['username', 'email', 'role', 'is_active', 'date_joined']
-    list_filter = ['is_active', 'role']
-    search_fields = ['username', 'email']
-    ordering = ['username']
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('role',)}),
-    )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('role',)}),
-    )
+    list_display = ['username', 'email', 'role']
 
 admin.site.register(CustomUser, CustomUserAdmin)

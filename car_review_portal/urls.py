@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from dealership import views as dealership_views
+from core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('reviews/', include('reviews.urls')),  # Include URLs from the reviews app
     path('dealership/', include('dealership.urls')),  # Include URLs from the dealership
     path('users/', include('users.urls')),  # Include URLs from the users app
-    #path('', include('reviews.urls')),  # Default to reviews app for the home page
+    path('core/', include('core.urls')),  # Default to reviews app for the home page
     path('', dealership_views.index, name='index'),  # root URL#
 ]

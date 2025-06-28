@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'reviews',  # Custom app for car reviews
     'dealership',  # Custom app for car dealerships
     'users',  # Custom app for user profiles
+    'core',  # Core app for shared functionality
 ]
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -122,6 +123,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = 'noreply@carreviewportal.com'
 
 
 # Static files (CSS, JavaScript, Images)
